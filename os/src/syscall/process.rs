@@ -40,6 +40,21 @@ pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
 
 // TODO: implement the syscall
 pub fn sys_trace(_trace_request: usize, _id: usize, _data: usize) -> isize {
-    trace!("kernel: sys_trace");
-    -1
+    use crate::trap::get_count;
+    match _trace_request {
+        0 => {
+            let id_ptr = _id as *const u8; // 将 usize 转换为 *const u8
+            let value = unsafe { *id_ptr }; // 读取指针指向的值
+            return value as isize; // 返回值
+        },
+
+        1 =>{
+            let id_ptr = _id as *mut u8; // 将 usize 转换为 *mut u8
+            unsafe { *id_ptr = _data as u8 }; // 写入值
+            return 0; // 返回 0 表示成功
+        },
+
+        2 => get_count(_id) as isize,
+        _ => return -1,
+    }
 }

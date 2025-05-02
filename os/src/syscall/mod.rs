@@ -39,7 +39,7 @@ pub fn syscall(syscall_id: usize, args: [usize; 3]) -> isize {
         SYSCALL_YIELD => sys_yield(),
         SYSCALL_GET_TIME => sys_get_time(args[0] as *mut TimeVal, args[1]),
         SYSCALL_TRACE => sys_trace(args[0], args[1], args[2]),
-        SYSCALL_INIT_COUNT => init_syscall_count() as isize,    //新增初始化计数器的系统调用
+        SYSCALL_INIT_COUNT => init_syscall_count(args[0]) as isize,    //新增初始化计数器的系统调用
         _ => panic!("Unsupported syscall_id: {}", syscall_id),
     }
 }

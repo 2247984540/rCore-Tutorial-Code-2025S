@@ -39,15 +39,24 @@ static mut SYSCALL_COUNT_EXIT: usize = 0;
 static mut SYSCALL_COUNT_TIME: usize = 0;
 static mut SYSCALL_COUNT_INIT: usize = 0;
 
-///my_ch3 :初始化全局变量
-pub fn init_syscall_count() -> usize {
-    unsafe {
-        SYSCALL_COUNT_TRACE = 0;
-        SYSCALL_COUNT_WRITE = 0;
-        SYSCALL_COUNT_YIELD = 0;
-        SYSCALL_COUNT_EXIT = 0;
-        SYSCALL_COUNT_TIME = 0;
-        SYSCALL_COUNT_INIT = 0;
+///my_ch3 :通过传入的系统调用号将对应的系统调用计数器清零
+/// 如果传入的系统调用号是SYSCALL_INIT_COUNT,则将所有的系统调用计数器清零
+pub fn init_syscall_count(id : usize) -> usize {
+    match id{
+        SYSCALL_TRACE => unsafe {SYSCALL_COUNT_TRACE = 0},
+        SYSCALL_WRITE => unsafe {SYSCALL_COUNT_WRITE = 0},
+        SYSCALL_YIELD => unsafe {SYSCALL_COUNT_YIELD = 0},
+        SYSCALL_EXIT => unsafe {SYSCALL_COUNT_EXIT = 0},
+        SYSCALL_GET_TIME => unsafe {SYSCALL_COUNT_TIME = 0},
+        SYSCALL_INIT_COUNT => unsafe {
+            SYSCALL_COUNT_INIT = 0;
+            SYSCALL_COUNT_TRACE = 0;
+            SYSCALL_COUNT_WRITE = 0;
+            SYSCALL_COUNT_YIELD = 0;
+            SYSCALL_COUNT_EXIT = 0;
+            SYSCALL_COUNT_TIME = 0;
+        },
+        _ => panic!("Unsupported syscall_id: {}", id),
     }
     1
 }
